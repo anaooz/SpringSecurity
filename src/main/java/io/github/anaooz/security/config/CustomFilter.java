@@ -1,5 +1,7 @@
 package io.github.anaooz.security.config;
 
+import io.github.anaooz.security.domain.security.CustomAuthentication;
+import io.github.anaooz.security.domain.security.IdentificacaoUsuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,11 +30,13 @@ public class CustomFilter extends OncePerRequestFilter {
 
         if(secretHeader != null) {
             if (secretHeader.equals("secr3t")) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                var identificacaoUsuario = new IdentificacaoUsuario(
+                        "id-secret",
                         "Muito secreto",
-                        null,
-                        List.of(new SimpleGrantedAuthority("USER")) //tem que ter prefixo
+                        "x-secret",
+                        List.of("USER")
                 );
+                Authentication authentication = new CustomAuthentication(identificacaoUsuario);
 
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);

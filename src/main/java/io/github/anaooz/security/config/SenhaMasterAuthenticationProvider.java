@@ -1,5 +1,7 @@
 package io.github.anaooz.security.config;
 
+import io.github.anaooz.security.domain.security.CustomAuthentication;
+import io.github.anaooz.security.domain.security.IdentificacaoUsuario;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,9 +23,13 @@ public class SenhaMasterAuthenticationProvider implements AuthenticationProvider
         String senhaMaster = "@321";
 
         if(loginMaster.equals(login) && senhaMaster.equals(senha)) {
-            return new UsernamePasswordAuthenticationToken("Sou master",
-                    null , //credentials devolve a senha, ruim pro GET
-                    List.of(new SimpleGrantedAuthority("ADMIN")));
+            IdentificacaoUsuario identificacaoUsuario = new IdentificacaoUsuario(
+                "Sou master",
+                    "Master",
+                    loginMaster,
+                    List.of("ADMIN")
+            );
+            return new CustomAuthentication(identificacaoUsuario);
         }
 
         return null;
